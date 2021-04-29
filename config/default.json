@@ -1,0 +1,25 @@
+{
+    "server": {
+        "http_max_body_size": "5mb",
+        "timeout": 240000
+    },
+    "db": {
+        "name": "solus-employee",
+        "host": "localhost",
+        "port": 27017
+    },
+    "api": {
+        "version": "v1",
+        "port": 5000,
+        "environment": "developement"
+    },
+    "logLevel": "info",
+    "logEnabled": true,
+    "cors": {
+        "allowLocal": true
+    },
+    "jwt": {
+        "secret": "35c905a8-p024-1432-z632",
+        "expiresIn": "30d"
+    }
+}
