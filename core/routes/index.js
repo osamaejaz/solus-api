@@ -5,7 +5,7 @@ const config = require('config');
 function loadRoutes(app) {
     glob.sync(`${__dirname}/${config.get('api.version')}/*.js`).forEach((file) => {
         app.use(`/${config.get('api.version')}/`, require(path.resolve(file)));
-    })
+    });
 
     handle404Error(app);
 }

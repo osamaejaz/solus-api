@@ -5,8 +5,8 @@ const readExcelFile = require('../../middleware/readExcel');
 const EmployeeController = new (require('../../controllers/EmployeeControlller'))();
 
 router.post(
-    'employee-bulk-upload',
-    upload('employee-excel', 'excel'),
+    '/employee-bulk-upload',
+    upload('bulkEmployee', 'excel'),
     readExcelFile,
     EmployeeController.uploadBulkEmployee
 );
