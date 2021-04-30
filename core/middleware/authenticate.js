@@ -21,14 +21,12 @@ const authenticate = (req, res, next) => {
     }
 };
 
-const getSignToken = async (user) => {
-    const token = jwt.sign(user, config.get('jwt.secret'), {
+function getSignToken(user) {
+    const token = jwt.sign(user.toJSON(), config.get('jwt.secret'), {
         expiresIn: config.get('jwt.expiresIn')
     });
-
     return token;
-};
-
+}
 
 module.exports = {
     authenticate,

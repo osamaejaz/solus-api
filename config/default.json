@@ -19,7 +19,7 @@
         "allowLocal": true
     },
     "jwt": {
-        "secret": "35c905a8-p024-1432-z632",
+        "secret": "35c905a8-p024-1432-z632-60887817613k",
         "expiresIn": "30d"
     }
 }

@@ -1,14 +1,15 @@
 const cors = require('cors');
 const http = require('http');
 const config = require('config');
+const express = require('express');
 const logger = require('../core/utils/logger');
 const requestIp = require('request-ip');
 const { authenticate } = require('./middleware/authenticate');
 const Routes = require('./routes');
+const MAX_BODY_SIZE = config.get('server.http_max_body_size');
+
 async function setupServer(app) {
     server = http.createServer(app);
-
-    Routes.init(app);
 
     app.get('/health', (req, res) => {
         res.status(200).json({ status: 'up' });
@@ -47,8 +48,12 @@ async function setupServer(app) {
             }
         })
     );
+    
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json({ limit: MAX_BODY_SIZE }));
 
     // app.use(authenticate);
+    Routes.init(app);
 
     server.listen(config.get('api.port'));
     server.timeout = config.get('server.timeout');
