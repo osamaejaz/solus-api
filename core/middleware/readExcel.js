@@ -12,6 +12,7 @@ module.exports = (req, res, next) => {
             readFileFromLocal(filePath)
                 .then((data) => {
                     req.fileData = data;
+                    deleteFileFromLocal({ filePath });
                     next();
                 })
                 .catch((error) => {
@@ -57,3 +58,11 @@ const readExcelToArray = (buffers) => {
     }
     return fileContent;
 };
+
+const deleteFileFromLocal = ({ filePath }) => {
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            throw new Error(err);
+        }
+    });
+}

@@ -11,4 +11,6 @@ router.post(
     EmployeeController.uploadBulkEmployee
 );
 
+router.post('/employee', upload('employeeImage', 'image'), EmployeeController.addNewEmployee);
+
 module.exports = router;

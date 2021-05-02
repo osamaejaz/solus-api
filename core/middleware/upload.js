@@ -8,7 +8,9 @@ module.exports = (fieldName, type) => {
             case 'excel':
                 dest = `temp/${type}`;
                 break;
-
+            case 'image':
+                dest = `temp/${type}`;
+                break;
             default:
                 throw new Error('Invalid File Upload');
         }

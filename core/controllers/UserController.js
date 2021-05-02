@@ -30,12 +30,6 @@ class UserController {
             });
         }
     }
-
-    getUserDetailsById(req, res) {
-        return res.status(200).send({
-            description: 'User is logged in'
-        });
-    }
 }
 
 module.exports = UserController;

@@ -1,3 +1,4 @@
+const EmployeeModel = require('../models/Employee');
 let instance = '';
 class EmployeeService {
     constructor() {}
@@ -7,7 +8,45 @@ class EmployeeService {
         }
         return instance;
     }
+
+    async addNewEmployee({ employeeData }) {
+        console.log(employeeData)
+        const { code, emailId } = employeeData;
+        const isCodeAndEmailTaken = await this.isCodeAndEmailTaken({ code, emailId });
+        if (isCodeAndEmailTaken) {
+            throw new Error('Code or Email Already assigned');
+        }
+        const employee = await EmployeeModel.create(employeeData);
+        return employee;
+    }
+
+    async isCodeAndEmailTaken({ code, emailId }) {
+        const findConditions = {};
+        findConditions['$or'] = [{ code }, { emailId }];
+        const user = await EmployeeModel.findOne(findConditions);
+        return !!user;
+    }
+
     async uploadBulkEmployee({ excelData = [] }) {
+        const { items = [], isExcelValid } = this.validateBulkUpload({
+            excelData
+        });
+        if (!isExcelValid) {
+            // Generate Error report;
+            return isExcelValid;
+        }
+
+        if (items && items.length) {
+            try {
+                const result = await EmployeeModel.insertMany(items);
+                return result;
+            } catch (error) {
+                throw new Error(error);
+            }
+        }
+    }
+
+    validateBulkUpload({ excelData = [] }) {
         let items = [];
         let isExcelValid = true;
         let codes = [];
@@ -19,10 +58,40 @@ class EmployeeService {
                     if (!data.code) {
                         remarks.push('Code is required');
                     }
+                    if (data.code) {
+                        codes.includes(data.code)
+                            ? remarks.push('Duplicate Code')
+                            : '';
+                        codes.push(data.code);
+                    }
+                    if (!data.name) {
+                        remarks.push('Name is required');
+                    }
+                    if (!data.gender) {
+                        remarks.push('Gender is required');
+                    }
+                    if (!data.maritalStatus) {
+                        remarks.push('Marital Status is required');
+                    }
+                    if (!data.bloodGroup) {
+                        remarks.push('Blood group is required');
+                    }
+                    if (!data.emailId) {
+                        remarks.push('Email Id is required');
+                    }
+
+                    if (remarks.length) {
+                        data['remarks'] = remarks
+                            .map((remark) => remark)
+                            .join('\n');
+                        isExcelValid = false;
+                    }
+
+                    items.push(data);
                 }
             }
         }
-        return excelData;
+        return { items, isExcelValid };
     }
 
     trimData(data) {
